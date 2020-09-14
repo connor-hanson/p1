@@ -103,6 +103,30 @@ int getVm(int id) {
 	return vm;
 }
 
+void printCmd(int id) {
+	FILE *cmdFile;
+	char next;
+	char *addressFull;
+	
+	if((addressFull = malloc(20))) {
+		sprintf(addressFull, "/proc/%d", id);
+		strcat(addressFull, "/cmdline");
+		
+		if((cmdFile = fopen(addressFull, "r"))) {
+			next = fgetc(cmdFile);
+			while(next != EOF) {
+				if(next != '\0') {
+					printf("%c", next);
+				}
+				next = fgetc(cmdFile);
+			}
+			printf("\n");
+			fclose(cmdFile);
+		}
+		free(addressFull);
+	}
+}
+
 int main(int argc, char *argv[]) {
 	if(argc == 2) {
 		int test = atoi(argv[1]);
