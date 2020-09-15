@@ -31,10 +31,11 @@ int set_flags(int argc, char* argv[]) {
 
             case 's': 
                 sflag = 1; 
+
                 // check strlen to only allow -s & -s- to be valid
                 if (optarg != NULL && (strlen(optarg) == 1)) {
                     sflag = 0;
-                } else if (strlen(optarg) > 1) {
+                } else if (optarg != NULL && strlen(optarg) > 1) {
                     fprintf(stderr, "Syntax error: -s option"); 
                     return -1;
                 }                
@@ -44,7 +45,7 @@ int set_flags(int argc, char* argv[]) {
                 Uflag = 1;
                 if (optarg != NULL && (strlen(optarg) == 1)) {
                     Uflag = 0;
-                } else if (strlen(optarg) > 1) {
+                } else if (optarg != NULL && strlen(optarg) > 1) {
                     fprintf(stderr, "Syntax error: -U option"); 
                     return -1;
                 }
@@ -62,7 +63,7 @@ int set_flags(int argc, char* argv[]) {
                 cflag = 1;
                 if (optarg != NULL && (strlen(optarg) == 1)) {
                     cflag = 0;
-                } else if (strlen(optarg) > 1) {
+                } else if (optarg != NULL && strlen(optarg) > 1) {
                     fprintf(stderr, "Syntax error: -c option"); 
                     return -1;
                 }

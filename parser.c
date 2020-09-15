@@ -127,7 +127,7 @@ void printCmd(int id) {
 	}
 }
 
-int main(int argc, char *argv[]) {
+/*int main(int argc, char *argv[]) {
 	if(argc == 2) {
 		int test = atoi(argv[1]);
 		printf("test = %d\n", test);
@@ -136,4 +136,4 @@ int main(int argc, char *argv[]) {
 	}
 	
 	return (0);
-}
+}*/

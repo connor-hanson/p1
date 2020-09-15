@@ -18,10 +18,10 @@ int main(int argc, char *argv[]) {
     vflag = 0; // VRAM in pages used by proc
     cflag = 1; // CLA which started process
 
-    if (argc > 1) { // check if any options provided
-        if (set_flags(argc, argv) == -1) {
-            // error
-        }
+    int resp = set_flags(argc, argv);
+    
+    if (resp == -1) { //error
+        printf("Error setting flags\n");
     }
 
     return 0;
