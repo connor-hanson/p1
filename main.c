@@ -7,6 +7,42 @@
 #include <stdlib.h>
 #include <string.h>
 #include "optproc.h"
+#include "parser.h"
+
+// rn assuming that pid is given
+int print_ps() {
+    int pid = 0;
+
+    if (pid == 0) {
+        // iterate through all pid
+    }
+
+    if (pflag) {
+        pid = pflag; // fix to allow several -p
+    }
+
+    if (sflag) {
+        printf("%c\n", getState(pid)); // needs to be char
+    }
+
+    if (Uflag) {
+        printf("%d\n", getUtime(pid));
+    }
+
+    if (Sflag) {
+        printf("%d\n", getStime(pid));
+    }
+
+    if (vflag) {
+        printf("%d\n", getVm(pid));
+    }
+
+    if (cflag) {
+        printCmd(pid);
+    }
+
+    return 0;
+}
 
 int main(int argc, char *argv[]) {
 
@@ -24,6 +60,8 @@ int main(int argc, char *argv[]) {
         printf("Error setting flags\n");
     }
 
+    // check flags
+    print_ps();
     return 0;
 }
 

@@ -23,7 +23,7 @@ char getState(int id) {
 			fclose(statFile);
 		}
 		else {
-			state = 0;
+			state = '~';
 		}	
 		free(addressFull);
 	}	

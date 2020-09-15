@@ -23,6 +23,7 @@ int set_flags(int argc, char* argv[]) {
             case 'p':
                 pflag = 1;
                 pid = atoi(optarg);
+                pflag = pid; // FIXME
                 if (pid == 0) { // cannot be converted to int
                     return -1;
                 }

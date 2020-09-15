@@ -9,4 +9,6 @@ int getStime(int id);
 
 int getVm(int id);
 
+void printCmd(int id);
+
 #endif
