@@ -11,4 +11,6 @@ int getVm(int id);
 
 void printCmd(int id);
 
+int iterate_proc();
+
 #endif

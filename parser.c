@@ -5,7 +5,70 @@
 #include <string.h>
 #include <sys/types.h>
 #include <errno.h>
+#include <dirent.h>
 #include "parser.h"
+#include "optproc.h"
+
+void print_info(int pid) {
+
+	printf("%d%s\t", pid, ": ");
+
+    if (sflag) {
+        char resp = getState(pid);
+        if (resp != '~') {
+            printf("%s %c\t", "s", resp); // needs to be char
+        } else {
+            printf("Error doing some dumb shit idk");
+        }
+    }
+
+    if (Uflag) {
+        printf("%s %d\t", "U", getUtime(pid));
+    }
+
+    if (Sflag) {
+        printf("%s %d\t", "S", getStime(pid));
+    }
+
+    if (vflag) {
+        printf("%s %d\t", "v", getVm(pid));
+    }
+
+    if (cflag) {
+        printCmd(pid);
+    }
+
+	printf("\n");
+}
+
+// check if needs iteration through /proc
+// probably bad practice using optproc flags here
+int iterate_proc() {
+
+	if (pflag != 0) {
+		print_info(pflag);
+	} else {
+
+		DIR *dir;
+		struct dirent *entry;
+
+		if ((dir = opendir("/proc")) == NULL) {
+			perror("opendir() error");
+		} else {
+			puts("contents of proc: ");
+			while ((entry = readdir(dir)) != NULL) {
+				int pid = atoi(entry->d_name);
+				if (!pid) {
+					continue;
+				}
+				print_info(pid);
+				//printf("  %d\n", atoi(entry->d_name));
+			}
+		closedir(dir);
+		}
+	}
+	return 1;
+}
 
 char getState(int id) {
 	FILE *statFile;
@@ -23,7 +86,7 @@ char getState(int id) {
 			fclose(statFile);
 		}
 		else {
-			state = '~';
+			state = '~'; //error
 		}	
 		free(addressFull);
 	}	
