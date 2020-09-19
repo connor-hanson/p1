@@ -9,6 +9,7 @@
 #include "parser.h"
 #include "optproc.h"
 
+// format everything with a tab following it
 void print_info(int pid) {
 
 	printf("%d%s\t", pid, ": ");
@@ -56,13 +57,13 @@ int iterate_proc() {
 			perror("opendir() error");
 		} else {
 			puts("contents of proc: ");
+			// iterate through each entry in directory
 			while ((entry = readdir(dir)) != NULL) {
 				int pid = atoi(entry->d_name);
 				if (!pid) {
 					continue;
 				}
 				print_info(pid);
-				//printf("  %d\n", atoi(entry->d_name));
 			}
 		closedir(dir);
 		}
@@ -73,7 +74,7 @@ int iterate_proc() {
 char getState(int id) {
 	FILE *statFile;
 	int pid;
-	char comm[10];
+	char comm[50];
 	char state;
 	char *addressFull;
 	
@@ -96,7 +97,7 @@ char getState(int id) {
 int getUtime(int id) {
 	FILE *statFile;
 	int i, utime, pid, ppid;
-	char comm[10];
+	char comm[50]; // alloc more space if stack smashes happen
 	char state;
 	char *addressFull;
 	
@@ -122,7 +123,7 @@ int getUtime(int id) {
 int getStime(int id) {
 	FILE *statFile;
 	int i, stime, pid, ppid;
-	char comm[10];
+	char comm[50];
 	char state;
 	char *addressFull;
 	
