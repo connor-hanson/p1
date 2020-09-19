@@ -9,10 +9,30 @@
 #include "parser.h"
 #include "optproc.h"
 
+void print_header() {
+	printf("%s\t\t", "pid");
+
+	if (sflag)
+		printf("%s\t", "State");	
+	if (Uflag)
+		printf("%s\t", "U_Time");
+	if (Sflag)
+		printf("%s\t", "S_time");
+	if (vflag)
+		printf("%s\t", "VMem");
+	if (cflag)
+		printf("%s\t", "CL Arg");
+}
+
 // format everything with a tab following it
 void print_info(int pid) {
 
-	printf("%d%s\t", pid, ": ");
+	// align stuff
+	if (pid < 10000) {
+		printf("%d%s\t\t", pid, ": ");
+	} else {
+		printf("%d%s\t", pid, ": ");
+	}
 
     if (sflag) {
         char resp = getState(pid);
@@ -45,6 +65,7 @@ void print_info(int pid) {
 // check if needs iteration through /proc
 // probably bad practice using optproc flags here
 int iterate_proc() {
+	print_header();
 
 	if (pflag != 0) {
 		print_info(pflag);
@@ -56,7 +77,6 @@ int iterate_proc() {
 		if ((dir = opendir("/proc")) == NULL) {
 			perror("opendir() error");
 		} else {
-			puts("contents of proc: ");
 			// iterate through each entry in directory
 			while ((entry = readdir(dir)) != NULL) {
 				int pid = atoi(entry->d_name);
