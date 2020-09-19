@@ -26,7 +26,9 @@ int main(int argc, char *argv[]) {
     }
 
     // check flags
-    iterate_proc();
+    if (iterate_proc() == -1) {
+        printf("Error iterating through processes\n");
+    }
     return 0;
 }
 

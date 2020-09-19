@@ -24,9 +24,10 @@ void print_header() {
 		printf("%s\t", "CL Arg");
 }
 
-// format everything with a tab following it
-void print_info(int pid) {
-
+// format everything with a tab (or 2) following it
+// print according to user specified flags
+// return 1 if all good, -1 for error
+int print_info(int pid) {
 	// align stuff
 	if (pid < 10000) {
 		printf("%d%s\t\t", pid, ": ");
@@ -37,22 +38,41 @@ void print_info(int pid) {
     if (sflag) {
         char resp = getState(pid);
         if (resp != '~') {
-            printf("%s %c\t", "s", resp); // needs to be char
+            printf("%s %c\t", "s", resp);
         } else {
             printf("Error doing some dumb shit idk");
+			return -1;
         }
     }
 
     if (Uflag) {
-        printf("%s %d\t", "U", getUtime(pid));
+		int Utime = getUtime(pid);
+		if (Utime != -1) {
+			printf("%s %d\t", "U", Utime);
+		} else {
+			printf("Error with Utime");
+			return -1;
+		}
     }
 
     if (Sflag) {
-        printf("%s %d\t", "S", getStime(pid));
+		int Stime = getStime(pid);
+		if (Stime != -1) {
+			printf("%s %d\t", "S", Stime);
+		} else {
+			printf("Error with Stime");
+			return -1;
+		} 
     }
 
     if (vflag) {
-        printf("%s %d\t", "v", getVm(pid));
+		int vm = getVm(pid);
+		if (vm != -1) {
+			printf("%s %d\t", "v", vm);
+		} else {
+			printf("Error with vm!");
+			return -1;
+		}
     }
 
     if (cflag) {
@@ -60,17 +80,23 @@ void print_info(int pid) {
     }
 
 	printf("\n");
+	return 1;
 }
 
 // check if needs iteration through /proc
-// probably bad practice using optproc flags here
+// FIXME: probably bad practice using optproc flags here
+// print header, and call print method for either 1 or all pids
+// return -1 if error, else 1
 int iterate_proc() {
 	print_header();
 
+	// if needing to print for a specific pid
 	if (pflag != 0) {
 		print_info(pflag);
-	} else {
-
+	} 
+	
+	else {
+		// cite this
 		DIR *dir;
 		struct dirent *entry;
 
@@ -80,10 +106,14 @@ int iterate_proc() {
 			// iterate through each entry in directory
 			while ((entry = readdir(dir)) != NULL) {
 				int pid = atoi(entry->d_name);
+				// if 0 is string
 				if (!pid) {
 					continue;
 				}
-				print_info(pid);
+				if (print_info(pid) == -1) {
+					printf("%s%d\n", "Error getting info for pid: ", pid);
+					return -1;
+				}
 			}
 		closedir(dir);
 		}
@@ -91,6 +121,8 @@ int iterate_proc() {
 	return 1;
 }
 
+// return state charcter of process <id>
+// return '~' if error
 char getState(int id) {
 	FILE *statFile;
 	int pid;
@@ -114,6 +146,8 @@ char getState(int id) {
 	return state;
 }
 
+// Return user time used by process <id>
+// return -1 if error
 int getUtime(int id) {
 	FILE *statFile;
 	int i, utime, pid, ppid;
@@ -140,6 +174,8 @@ int getUtime(int id) {
 	return utime;
 }
 
+// return System time used by process <id>
+// return -1 if error
 int getStime(int id) {
 	FILE *statFile;
 	int i, stime, pid, ppid;
@@ -166,6 +202,8 @@ int getStime(int id) {
 	return stime;
 }
 
+// return Virtual mem in pages for process <id>
+// return -1 if error
 int getVm(int id) {
 	FILE *statFile;
 	int vm;
@@ -187,6 +225,7 @@ int getVm(int id) {
 	return vm;
 }
 
+// print command starting process <id>
 void printCmd(int id) {
 	FILE *cmdFile;
 	char next;
@@ -210,14 +249,3 @@ void printCmd(int id) {
 		free(addressFull);
 	}
 }
-
-/*int main(int argc, char *argv[]) {
-	if(argc == 2) {
-		int test = atoi(argv[1]);
-		printf("test = %d\n", test);
-		int utime = getVm(test);
-		printf("utime: %d\n", utime);
-	}
-	
-	return (0);
-}*/
