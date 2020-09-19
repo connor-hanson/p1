@@ -1,3 +1,5 @@
+//Author: Connor Hanson, Tiger Ji
+
 #include <dirent.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -9,6 +11,7 @@
 #include "parser.h"
 #include "optproc.h"
 
+//Print output categories
 void print_header() {
 	printf("%s\t\t", "pid");
 
@@ -40,7 +43,7 @@ int print_info(int pid) {
         if (resp != '~') {
             printf("%s %c\t", "s", resp);
         } else {
-            printf("Error doing some dumb shit idk");
+            printf("Error getting state");
 			return -1;
         }
     }
@@ -121,8 +124,13 @@ int iterate_proc() {
 	return 1;
 }
 
-// return state charcter of process <id>
-// return '~' if error
+/* return state charcter of process <id>
+ *
+ * param:
+ * 	int id - pid of target process
+ * returns: char in /proc/pid/stat state field
+ *	    '~' if an error occurs
+ */
 char getState(int id) {
 	FILE *statFile;
 	int pid;
@@ -146,11 +154,16 @@ char getState(int id) {
 	return state;
 }
 
-// Return user time used by process <id>
-// return -1 if error
+/* Return user time used by process <id>
+ * 
+ * param:
+ *	int id - pid of target process
+ * returns: int in /proc/id/stat utime field
+ *	    -1 in case of error
+ */
 int getUtime(int id) {
 	FILE *statFile;
-	int i, utime, pid, ppid;
+	int i, utime;
 	char comm[50]; // alloc more space if stack smashes happen
 	char state;
 	char *addressFull;
@@ -160,9 +173,9 @@ int getUtime(int id) {
 		strcat(addressFull, "/stat");
 		
 		if((statFile = fopen(addressFull, "r"))) {
-			fscanf(statFile, "%d %s %c %d", &pid, comm, &state, &ppid);
-			for(i = 0; i < 10; i++) {
-				fscanf(statFile, "%d", &utime);
+			fscanf(statFile, "%d %s %c", &utime, comm, &state); //scan through until last non-int field
+			for(i = 0; i < 11; i++) {
+				fscanf(statFile, "%d", &utime); //scan through ints until utime field
 			}
 			fclose(statFile);
 		}
@@ -174,11 +187,16 @@ int getUtime(int id) {
 	return utime;
 }
 
-// return System time used by process <id>
-// return -1 if error
+/* return System time used by process <id>
+ * 
+ * param:
+ *	int id - pid of target process
+ * returns: int in /proc/id/stat stime field
+ *	    -1 in case of error
+ */
 int getStime(int id) {
 	FILE *statFile;
-	int i, stime, pid, ppid;
+	int i, stime;
 	char comm[50];
 	char state;
 	char *addressFull;
@@ -188,9 +206,9 @@ int getStime(int id) {
 		strcat(addressFull, "/stat");
 		
 		if((statFile = fopen(addressFull, "r"))) {
-			fscanf(statFile, "%d %s %c %d", &pid, comm, &state, &ppid);
-			for(i = 0; i < 11; i++) {
-				fscanf(statFile, "%d", &stime);
+			fscanf(statFile, "%d %s %c", &stime, comm, &state); //scan until last non-int field
+			for(i = 0; i < 12; i++) {
+				fscanf(statFile, "%d", &stime); //scan through ints until stime field
 			}
 			fclose(statFile);
 		}
@@ -202,8 +220,13 @@ int getStime(int id) {
 	return stime;
 }
 
-// return Virtual mem in pages for process <id>
-// return -1 if error
+/* return Virtual mem in pages for process <id>
+ *
+ * param:
+ *	int id - pid of target process
+ * returns: vm used in /proc/id/statm 'size' field
+ *	    -1 in case of error
+ */
 int getVm(int id) {
 	FILE *statFile;
 	int vm;
@@ -225,7 +248,11 @@ int getVm(int id) {
 	return vm;
 }
 
-// print command starting process <id>
+/* print command starting process <id> found in /proc/id/cmdline
+ *
+ * param:
+ *	int id - pid of target process
+ */
 void printCmd(int id) {
 	FILE *cmdFile;
 	char next;
