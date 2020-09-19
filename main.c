@@ -1,4 +1,4 @@
-// Author: Connor Hanson
+// Author: Connor Hanson, Tiger Ji
 // Process the options input into the program
 
 #include <dirent.h>
