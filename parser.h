@@ -11,6 +11,6 @@ int getVm(int id);
 
 void printCmd(int id);
 
-int iterate_proc();
+int iterate_proc(int flags[]);
 
 #endif

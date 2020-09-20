@@ -12,21 +12,23 @@
 int main(int argc, char *argv[]) {
 
     // display option flags
-    pflag = 0; // pid
+    /*pflag = 0; // pid
     sflag = 0; // single state character info
     Uflag = 1; // user time consumed by process
     Sflag = 0; // sys time consumed by proc
     vflag = 0; // VRAM in pages used by proc
-    cflag = 1; // CLA which started process
+    cflag = 1; // CLA which started process*/
 
-    int resp = set_flags(argc, argv);
+    int flags[] = {0, 0, 1, 0, 0, 1};
+
+    int resp = set_flags(argc, argv, flags);
     
     if (resp == -1) { //error
         printf("Error setting flags\n");
     }
 
     // check flags
-    if (iterate_proc() == -1) {
+    if (iterate_proc(flags) == -1) {
         printf("Error iterating through processes\n");
     }
     return 0;

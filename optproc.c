@@ -9,7 +9,7 @@
 
 // return 1 if all good, else -1
 // Parses the provided CLA and sets flags
-int set_flags(int argc, char* argv[]) {
+int set_flags(int argc, char* argv[], int flags[]) {
     int c = 0;
     int pid;
     extern char* optarg;
@@ -23,9 +23,9 @@ int set_flags(int argc, char* argv[]) {
 
             // TODO allow multiple -p
             case 'p':
-                pflag = 1;
+                flags[0] = 1;
                 pid = atoi(optarg);
-                pflag = pid; // FIXME
+                flags[0] = pid; // FIXME, check for no input
                 if (pid == 0) { // cannot be converted to int
                     return -1;
                 }
@@ -33,11 +33,11 @@ int set_flags(int argc, char* argv[]) {
             break;
 
             case 's': 
-                sflag = 1; 
+                flags[1] = 1; 
 
                 // check strlen to only allow -s & -s- to be valid
                 if (optarg != NULL && (strlen(optarg) == 1)) {
-                    sflag = 0;
+                    flags[1] = 0;
                 } else if (optarg != NULL && strlen(optarg) > 1) {
                     fprintf(stderr, "Syntax error: -s option"); 
                     return -1;
@@ -45,9 +45,9 @@ int set_flags(int argc, char* argv[]) {
             break;
 
             case 'U':
-                Uflag = 1;
+                flags[2] = 1;
                 if (optarg != NULL && (strlen(optarg) == 1)) {
-                    Uflag = 0;
+                    flags[2] = 0;
                 } else if (optarg != NULL && strlen(optarg) > 1) {
                     fprintf(stderr, "Syntax error: -U option"); 
                     return -1;
@@ -55,17 +55,17 @@ int set_flags(int argc, char* argv[]) {
             break;
 
             case 'S': 
-                Sflag = 1;
+                flags[3] = 1;
             break;
 
             case 'v':
-                vflag = 1;
+                flags[4] = 1;
             break;
 
             case 'c':
-                cflag = 1;
+                flags[5] = 1;
                 if (optarg != NULL && (strlen(optarg) == 1)) {
-                    cflag = 0;
+                    flags[5] = 0;
                 } else if (optarg != NULL && strlen(optarg) > 1) {
                     fprintf(stderr, "Syntax error: -c option"); 
                     return -1;

@@ -12,33 +12,33 @@
 #include "optproc.h"
 
 //Print output categories
-void print_header() {
+void print_header(int flags[]) {
 	printf("%s\t\t", "pid");
 
-	if (sflag)
+	if (flags[1])
 		printf("%s\t", "State");	
-	if (Uflag)
+	if (flags[2])
 		printf("%s\t", "U_Time");
-	if (Sflag)
+	if (flags[3])
 		printf("%s\t", "S_time");
-	if (vflag)
+	if (flags[4])
 		printf("%s\t", "VMem");
-	if (cflag)
+	if (flags[5])
 		printf("%s\t", "CL Arg");
 }
 
 // format everything with a tab (or 2) following it
 // print according to user specified flags
 // return 1 if all good, -1 for error
-int print_info(int pid) {
+int print_info(int pid, int flags[]) {
 	// align stuff
-	if (pid < 10000) {
+	if (pid < 100000) {
 		printf("%d%s\t\t", pid, ": ");
 	} else {
 		printf("%d%s\t", pid, ": ");
 	}
 
-    if (sflag) {
+    if (flags[1]) {
         char resp = getState(pid);
         if (resp != '~') {
             printf("%s %c\t", "s", resp);
@@ -48,7 +48,7 @@ int print_info(int pid) {
         }
     }
 
-    if (Uflag) {
+    if (flags[2]) {
 		int Utime = getUtime(pid);
 		if (Utime != -1) {
 			printf("%s %d\t", "U", Utime);
@@ -58,7 +58,7 @@ int print_info(int pid) {
 		}
     }
 
-    if (Sflag) {
+    if (flags[3]) {
 		int Stime = getStime(pid);
 		if (Stime != -1) {
 			printf("%s %d\t", "S", Stime);
@@ -68,7 +68,7 @@ int print_info(int pid) {
 		} 
     }
 
-    if (vflag) {
+    if (flags[4]) {
 		int vm = getVm(pid);
 		if (vm != -1) {
 			printf("%s %d\t", "v", vm);
@@ -78,7 +78,7 @@ int print_info(int pid) {
 		}
     }
 
-    if (cflag) {
+    if (flags[5]) {
         printCmd(pid);
     }
 
@@ -90,12 +90,12 @@ int print_info(int pid) {
 // FIXME: probably bad practice using optproc flags here
 // print header, and call print method for either 1 or all pids
 // return -1 if error, else 1
-int iterate_proc() {
-	print_header();
+int iterate_proc(int flags[]) {
+	print_header(flags);
 
 	// if needing to print for a specific pid
-	if (pflag != 0) {
-		print_info(pflag);
+	if (flags[0] != 0) {
+		print_info(flags[0], flags);
 	} 
 	
 	else {
@@ -113,7 +113,7 @@ int iterate_proc() {
 				if (!pid) {
 					continue;
 				}
-				if (print_info(pid) == -1) {
+				if (print_info(pid, flags) == -1) {
 					printf("%s%d\n", "Error getting info for pid: ", pid);
 					return -1;
 				}
