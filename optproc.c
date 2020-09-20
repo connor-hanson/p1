@@ -1,3 +1,5 @@
+//Author: Connor Hanson, Tiger Ji
+
 #include <dirent.h>
 #include <unistd.h>
 #include <stdio.h>
