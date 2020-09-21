@@ -9,6 +9,8 @@
 #include "optproc.h"
 #include "parser.h"
 
+/* Print proper use arguments in case of error
+ */
 void print_usage() {
     printf("Usage: \n");
     printf("\tps [options]\n");
@@ -40,4 +42,3 @@ int main(int argc, char *argv[]) {
     }
     return 0;
 }
-
