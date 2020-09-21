@@ -8,8 +8,15 @@
 #include <string.h>
 #include "optproc.h"
 
-// return 1 if all good, else -1
-// Parses the provided CLA and sets flags
+/* set flags based on arguments
+ *
+ * param:
+ *	int argc - argc from command input
+ *	char* argv[] - argv from command input
+ *	int flags[] - flags to be set
+ * returns: 1 if flags set successfully
+ *	    -1 otherwise
+ */
 int set_flags(int argc, char* argv[], int flags[]) {
     int c = 0;
     int pid;
@@ -18,11 +25,10 @@ int set_flags(int argc, char* argv[], int flags[]) {
 
     while ((c = getopt(argc, argv, "p:s::U::S::v::c::")) != -1) {
         switch (c) {
-            // TODO allow multiple -p
             case 'p':       
                 flags[0] = 1;
                 pid = atoi(optarg);
-                flags[0] = pid; // FIXME, check for no input
+                flags[0] = pid;
                 if (pid == 0) { // cannot be converted to int, includes spaces
                     printf("Error, pid could not be converted to int");
                     return -1;
