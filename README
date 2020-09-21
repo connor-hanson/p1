@@ -1,0 +1,7 @@
+Authors:
+  Connor Hanson (cbhanson2@wisc.edu)
+  Tiger Ji (tfji@wisc.edu)
+  
+Contributions:
+  Connor - command argument parsing, output based on args
+  Tiger - file parsing (stat, statm, etc)
