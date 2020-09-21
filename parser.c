@@ -11,7 +11,8 @@
 #include "parser.h"
 #include "optproc.h"
 
-//Print output categories
+/* Print category header for output
+ */
 void print_header(int flags[]) {
 	printf("%s\t\t", "pid");
 
@@ -25,11 +26,17 @@ void print_header(int flags[]) {
 		printf("%s\t", "VMem");
 	if (flags[5])
 		printf("%s\t", "CL Arg");
+	printf("\n");
 }
 
-// format everything with a tab (or 2) following it
-// print according to user specified flags
-// return 1 if all good, -1 for error
+/* output information based on flags
+ *
+ * param:
+ *	int pid - pid of target process
+ *	int flags[] - flags based on command
+ * returns: 1 if printed successfully
+ *	    -1 otherwise
+ */
 int print_info(int pid, int flags[]) {
 	// align stuff
 	if (pid < 100000) {
@@ -86,10 +93,13 @@ int print_info(int pid, int flags[]) {
 	return 1;
 }
 
-// check if needs iteration through /proc
-// FIXME: probably bad practice using optproc flags here
-// print header, and call print method for either 1 or all pids
-// return -1 if error, else 1
+/* decides whether to print process list or specific proccess
+ *
+ * param:
+ *	int flags[] - flags set by command
+ * returns: 1 if no errors
+ *	    -1 otherwise
+ */
 int iterate_proc(int flags[]) {
 	print_header(flags);
 
