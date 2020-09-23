@@ -109,7 +109,6 @@ int iterate_proc(int flags[]) {
 	} 
 	
 	else {
-		// cite this
 		DIR *dir;
 		struct dirent *entry;
 
